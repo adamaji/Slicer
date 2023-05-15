@@ -225,7 +225,7 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
   if (!success)
     {
     // If the two source representations are the same, then probably the segment IDs were duplicate
-    if (fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() == toSegmentationNode->GetSegmentation()->GetMasterRepresentationName())
+    if (fromSegmentationNode->GetSegmentation()->GetSourceRepresentationName() == toSegmentationNode->GetSegmentation()->GetSourceRepresentationName())
       {
       QString message = tr("Segment ID of the moved segment (%1) might exist in the target segmentation.\n"
         "Please check the error window for details.").arg(segmentId.c_str());
@@ -238,8 +238,8 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
       "thus unable to move segment '%3' from segmentation '%4' to '%5'.\n\n"
       "Would you like to change the source representation of '%5' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %5.")
-      .arg(fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
-      .arg(toSegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
+      .arg(fromSegmentationNode->GetSegmentation()->GetSourceRepresentationName().c_str())
+      .arg(toSegmentationNode->GetSegmentation()->GetSourceRepresentationName().c_str())
       .arg(segmentId.c_str()).arg(fromSegmentationNode->GetName()).arg(toSegmentationNode->GetName());
     QMessageBox::StandardButton answer =
       QMessageBox::question(nullptr, tr("Failed to move segment between segmentations"), message,
@@ -248,18 +248,18 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
       {
       // Convert target segmentation to source representation of source segmentation
       bool successfulConversion = toSegmentationNode->GetSegmentation()->CreateRepresentation(
-        fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() );
+        fromSegmentationNode->GetSegmentation()->GetSourceRepresentationName() );
       if (!successfulConversion)
         {
         QString message = tr("Failed to convert %1 to %2").arg(toSegmentationNode->GetName())
-          .arg(fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str());
+          .arg(fromSegmentationNode->GetSegmentation()->GetSourceRepresentationName().c_str());
         QMessageBox::warning(nullptr, tr("Conversion failed"), message);
         return false;
         }
 
       // Change source representation of target to that of source
-      toSegmentationNode->GetSegmentation()->SetMasterRepresentationName(
-        fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() );
+      toSegmentationNode->GetSegmentation()->SetSourceRepresentationName(
+        fromSegmentationNode->GetSegmentation()->GetSourceRepresentationName() );
 
       // Retry reparenting
       return this->reparentItemInsideSubjectHierarchy(itemID, parentItemID);

@@ -414,7 +414,7 @@ bool vtkSlicerSegmentationGeometryLogic::IsSourceSegmentationWithBinaryLabelmapM
     && sourceSegmentationNode->GetSegmentation()
     && sourceSegmentationNode->GetSegmentation()->GetNumberOfSegments() > 0
     && sourceSegmentationNode->GetSegmentation()->ContainsRepresentation(binaryLabelmapName)
-    && sourceSegmentationNode->GetSegmentation()->GetMasterRepresentationName() == binaryLabelmapName )
+    && sourceSegmentationNode->GetSegmentation()->GetSourceRepresentationName() == binaryLabelmapName )
     {
     return true;
     }
@@ -435,7 +435,7 @@ bool vtkSlicerSegmentationGeometryLogic::InputSegmentationCanBeResampled()
     }
   if (!this->InputSegmentationNode->GetSegmentation()->ContainsRepresentation(
       vtkSegmentationConverter::GetBinaryLabelmapRepresentationName())
-    || this->InputSegmentationNode->GetSegmentation()->GetMasterRepresentationName()
+    || this->InputSegmentationNode->GetSegmentation()->GetSourceRepresentationName()
       != vtkSegmentationConverter::GetBinaryLabelmapRepresentationName())
     {
     return false;
@@ -540,7 +540,7 @@ bool vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode()
     }
 
   // Check if source representation is binary or fractional labelmap (those are the only supported representations in segment editor)
-  std::string masterRepresentationName = this->InputSegmentationNode->GetSegmentation()->GetMasterRepresentationName();
+  std::string masterRepresentationName = this->InputSegmentationNode->GetSegmentation()->GetSourceRepresentationName();
   if ( masterRepresentationName != vtkSegmentationConverter::GetBinaryLabelmapRepresentationName()
     && masterRepresentationName != vtkSegmentationConverter::GetFractionalLabelmapRepresentationName() )
     {

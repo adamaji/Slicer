@@ -200,7 +200,7 @@ void qMRMLSegmentationRepresentationsListView::populateRepresentationsList()
     representationLayout->addWidget(nameLabel);
 
     // Determine whether current representation is master or is present
-    bool master = !name.compare(segmentation->GetMasterRepresentationName().c_str());
+    bool master = !name.compare(segmentation->GetSourceRepresentationName().c_str());
     bool present = segmentation->ContainsRepresentation(reprIt->c_str());
 
     // Status
@@ -425,6 +425,6 @@ void qMRMLSegmentationRepresentationsListView::makeMaster()
       }
     }
 
-  d->SegmentationNode->GetSegmentation()->SetMasterRepresentationName(representationName.toUtf8().constData());
+  d->SegmentationNode->GetSegmentation()->SetSourceRepresentationName(representationName.toUtf8().constData());
   this->populateRepresentationsList();
 }

@@ -284,7 +284,7 @@ bool qSlicerSubjectHierarchySegmentationsPlugin::reparentItemInsideSubjectHierar
       "Would you like to change the source representation of '%4' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %4.")
       .arg(importedRepresentationName.c_str())
-      .arg(segmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
+      .arg(segmentationNode->GetSegmentation()->GetSourceRepresentationName().c_str())
       .arg(labelmapNode ? labelmapNode->GetName() : modelNode->GetName()).arg(segmentationNode->GetName());
     QMessageBox::StandardButton answer =
       QMessageBox::question(nullptr, tr("Failed to import data to segmentation"), message,
@@ -301,7 +301,7 @@ bool qSlicerSubjectHierarchySegmentationsPlugin::reparentItemInsideSubjectHierar
         }
 
       // Change source representation of target to that of source
-      segmentationNode->GetSegmentation()->SetMasterRepresentationName(importedRepresentationName);
+      segmentationNode->GetSegmentation()->SetSourceRepresentationName(importedRepresentationName);
 
       // Retry reparenting
       return this->reparentItemInsideSubjectHierarchy(itemID, parentItemID);
@@ -394,7 +394,7 @@ QString qSlicerSubjectHierarchySegmentationsPlugin::tooltip(vtkIdType itemID)con
     }
 
   // Source representation
-  tooltipString.append(tr(" (Source representation: %1)").arg(segmentation->GetMasterRepresentationName().c_str()));  //: parameter is the representation name
+  tooltipString.append(tr(" (Source representation: %1)").arg(segmentation->GetSourceRepresentationName().c_str()));  //: parameter is the representation name
 
   // Number of segments
   tooltipString.append(tr(" (Number of segments: %1)").arg(segmentation->GetNumberOfSegments()));
@@ -561,7 +561,7 @@ void qSlicerSubjectHierarchySegmentationsPlugin::showContextMenuActionsForItem(v
     if (segmentationNode && segmentationNode->GetSegmentation())
       {
       vtkSegmentation* segmentation = segmentationNode->GetSegmentation();
-      if (segmentation->GetMasterRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
+      if (segmentation->GetSourceRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
         {
         if (segmentation->ContainsRepresentation(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName()))
           {
@@ -572,7 +572,7 @@ void qSlicerSubjectHierarchySegmentationsPlugin::showContextMenuActionsForItem(v
         d->CreateBinaryLabelmapRepresentationAction->setVisible(true);
           }
         }
-      if (segmentation->GetMasterRepresentationName() != vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName())
+      if (segmentation->GetSourceRepresentationName() != vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName())
         {
         if (segmentation->ContainsRepresentation(vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName()))
           {

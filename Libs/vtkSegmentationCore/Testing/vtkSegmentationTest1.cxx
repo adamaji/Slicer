@@ -68,7 +68,7 @@ int vtkSegmentationTest1(int vtkNotUsed(argc), char* vtkNotUsed(argv)[])
 
   // Create segmentation with segment
   vtkNew<vtkSegmentation> sphereSegmentation;
-  sphereSegmentation->SetMasterRepresentationName(
+  sphereSegmentation->SetSourceRepresentationName(
     vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName() );
   sphereSegmentation->AddSegment(sphereSegment.GetPointer());
   if (sphereSegmentation->GetNumberOfSegments() != 1)
@@ -237,7 +237,7 @@ int vtkSegmentationTest1(int vtkNotUsed(argc), char* vtkNotUsed(argv)[])
 
   // Create segmentation with segment
   vtkNew<vtkSegmentation> cubeSegmentation;
-  cubeSegmentation->SetMasterRepresentationName(
+  cubeSegmentation->SetSourceRepresentationName(
     vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName() );
   cubeSegmentation->AddSegment(cubeSegment.GetPointer());
   if (cubeSegmentation->GetNumberOfSegments() != 1)

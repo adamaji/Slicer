@@ -486,11 +486,25 @@ public:
 // Get/set methods
 
   /// Get source representation name
-  vtkGetMacro(MasterRepresentationName, std::string);
+  vtkGetMacro(SourceRepresentationName, std::string);
   /// Set source representation name.
   /// Need to make sure before setting the name that the newly set source representation exists in
   /// the segmentation! Use \sa CreateRepresentation for that.
-  virtual void SetMasterRepresentationName(const std::string& representationName);
+  virtual void SetSourceRepresentationName(const std::string& representationName);
+
+  // Deprecated. Use GetSourceRepresentationName instead.
+  virtual std::string GetMasterRepresentationName()
+    {
+      qWarning("vtkSegmentation::SetMasterRepresentationName is deprecated, use SetSourceRepresentationName instead.");
+      return this->GetSourceRepresentationName();
+    }
+
+  // Deprecated. Use SetSourceRepresentationName instead.
+  virtual void SetMasterRepresentationName(const std::string& representationName)
+    {
+      qWarning("vtkSegmentation::SetMasterRepresentationName is deprecated, use SetSourceRepresentationName instead.");
+      this->SetSourceRepresentationName(representationName);
+    }
 
   /// Deep copies source segment to destination segment. If the same representation is found in baseline
   /// with up-to-date timestamp then the representation is reused from baseline.
@@ -552,7 +566,7 @@ protected:
   /// 1. This representation is saved on disk
   /// 2. If this representation is modified, the others are invalidated
   /// This value must be set by the creator of the segmentation object!
-  std::string MasterRepresentationName;
+  std::string SourceRepresentationName;
 
   /// Converter instance
   vtkSegmentationConverter* Converter;

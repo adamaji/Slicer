@@ -1586,7 +1586,7 @@ bool vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode(
 
   // If source representation is not binary labelmap, then cannot add
   // (this should have been done by the UI classes, notifying the users about hazards of changing the source representation)
-  if (segmentationNode->GetSegmentation()->GetMasterRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
+  if (segmentationNode->GetSegmentation()->GetSourceRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
     {
     vtkErrorWithObjectMacro(segmentationNode, "vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode:"
       "Source representation of the target segmentation node "
@@ -1678,7 +1678,7 @@ vtkDataObject* vtkSlicerSegmentationsModuleLogic::CreateRepresentationForOneSegm
 
   // Temporarily duplicate selected segment to only convert them, not the whole segmentation (to save time)
   vtkSmartPointer<vtkSegmentation> segmentationCopy = vtkSmartPointer<vtkSegmentation>::New();
-  segmentationCopy->SetMasterRepresentationName(segmentation->GetMasterRepresentationName());
+  segmentationCopy->SetSourceRepresentationName(segmentation->GetSourceRepresentationName());
   segmentationCopy->CopyConversionParameters(segmentation);
   segmentationCopy->CopySegmentFromSegmentation(segmentation, segmentID);
   if (!segmentationCopy->CreateRepresentation(representationName, true))
@@ -2653,7 +2653,7 @@ bool vtkSlicerSegmentationsModuleLogic::ReconvertAllRepresentations(vtkMRMLSegme
     reprIt != representationNames.end(); ++reprIt)
     {
     std::string targetRepresentationName = (*reprIt);
-    if (targetRepresentationName.compare(segmentation->MasterRepresentationName))
+    if (targetRepresentationName.compare(segmentation->SourceRepresentationName))
       {
       vtkNew<vtkSegmentationConversionPaths> paths;
       segmentation->GetPossibleConversions(targetRepresentationName, paths);

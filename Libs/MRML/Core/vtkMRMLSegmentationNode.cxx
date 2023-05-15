@@ -1010,7 +1010,7 @@ bool vtkMRMLSegmentationNode::SetMasterRepresentationToBinaryLabelmap()
     vtkErrorMacro("SetMasterRepresentationToBinaryLabelmap: Invalid segmentation");
     return false;
     }
-  this->Segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
+  this->Segmentation->SetSourceRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
   return true;
 }
 
@@ -1022,7 +1022,7 @@ bool vtkMRMLSegmentationNode::SetMasterRepresentationToClosedSurface()
     vtkErrorMacro("SetMasterRepresentationToClosedSurface: Invalid segmentation");
     return false;
     }
-  this->Segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName());
+  this->Segmentation->SetSourceRepresentationName(vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName());
   return true;
 }
 

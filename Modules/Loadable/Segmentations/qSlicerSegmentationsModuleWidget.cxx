@@ -760,7 +760,7 @@ bool qSlicerSegmentationsModuleWidget::copySegmentBetweenSegmentations(
   // If target segmentation is empty, make it match the source
   if (toSegmentation->GetNumberOfSegments()==0)
     {
-    toSegmentation->SetMasterRepresentationName(fromSegmentation->GetMasterRepresentationName());
+    toSegmentation->SetSourceRepresentationName(fromSegmentation->GetSourceRepresentationName());
     }
 
   // Check whether target is suitable to accept the segment.
@@ -780,24 +780,24 @@ bool qSlicerSegmentationsModuleWidget::copySegmentBetweenSegmentations(
     QString message = tr("Cannot convert source source representation '%1' into target master '%2', "
       "thus unable to copy segment '%3' from segmentation '%4' to '%5'.\n\nWould you like to change the source representation of '%5' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %5.")
-      .arg(fromSegmentation->GetMasterRepresentationName().c_str())
-      .arg(toSegmentation->GetMasterRepresentationName().c_str()).arg(segmentId).arg(fromNode->GetName()).arg(toNode->GetName());
+      .arg(fromSegmentation->GetSourceRepresentationName().c_str())
+      .arg(toSegmentation->GetSourceRepresentationName().c_str()).arg(segmentId).arg(fromNode->GetName()).arg(toNode->GetName());
     QMessageBox::StandardButton answer =
       QMessageBox::question(nullptr, tr("Failed to copy segment"), message,
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer == QMessageBox::Yes)
       {
       // Convert target segmentation to source representation of source segmentation
-      bool successfulConversion = toSegmentation->CreateRepresentation(fromSegmentation->GetMasterRepresentationName());
+      bool successfulConversion = toSegmentation->CreateRepresentation(fromSegmentation->GetSourceRepresentationName());
       if (!successfulConversion)
         {
-        QString message = tr("Failed to convert %1 to %2!").arg(toNode->GetName()).arg(fromSegmentation->GetMasterRepresentationName().c_str());
+        QString message = tr("Failed to convert %1 to %2!").arg(toNode->GetName()).arg(fromSegmentation->GetSourceRepresentationName().c_str());
         QMessageBox::warning(nullptr, tr("Conversion failed"), message);
         return false;
         }
 
       // Change source representation of target to that of source
-      toSegmentation->SetMasterRepresentationName(fromSegmentation->GetMasterRepresentationName());
+      toSegmentation->SetSourceRepresentationName(fromSegmentation->GetSourceRepresentationName());
 
       // Retry copy of segment
       return this->copySegmentBetweenSegmentations(fromSegmentation, toSegmentation, segmentId, removeFromSource);

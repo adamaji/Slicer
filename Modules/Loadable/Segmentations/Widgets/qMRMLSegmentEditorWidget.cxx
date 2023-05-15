@@ -1352,12 +1352,12 @@ bool qMRMLSegmentEditorWidget::setMasterRepresentationToBinaryLabelmap()
   if (d->SegmentationNode->GetSegmentation()->GetNumberOfSegments() < 1)
     {
     // If segmentation contains no segments, then set binary labelmap as master by default
-    d->SegmentationNode->GetSegmentation()->SetMasterRepresentationName(
+    d->SegmentationNode->GetSegmentation()->SetSourceRepresentationName(
       vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
     return true;
     }
 
-  if (d->SegmentationNode->GetSegmentation()->GetMasterRepresentationName() == vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
+  if (d->SegmentationNode->GetSegmentation()->GetSourceRepresentationName() == vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
     {
     // Current source representation is already binary labelmap
     return true;
@@ -1370,7 +1370,7 @@ bool qMRMLSegmentEditorWidget::setMasterRepresentationToBinaryLabelmap()
   QString message = tr("Editing requires binary labelmap source representation, but currently the source representation is %1. "
     "Changing the source representation requires conversion. Some details may be lost during conversion process.\n\n"
     "Change source representation to binary labelmap?").
-    arg(d->SegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str());
+    arg(d->SegmentationNode->GetSegmentation()->GetSourceRepresentationName().c_str());
   QMessageBox::StandardButton answer =
     QMessageBox::question(nullptr, tr("Change source representation to binary labelmap?"), message,
     QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
@@ -1402,7 +1402,7 @@ bool qMRMLSegmentEditorWidget::setMasterRepresentationToBinaryLabelmap()
 
   QApplication::setOverrideCursor(QCursor(Qt::BusyCursor));
 
-  d->SegmentationNode->GetSegmentation()->SetMasterRepresentationName(
+  d->SegmentationNode->GetSegmentation()->SetSourceRepresentationName(
     vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
 
   if (closedSurfacePresent)
@@ -2347,7 +2347,7 @@ void qMRMLSegmentEditorWidget::onCreateSurfaceToggled(bool on)
       }
     }
   // If unchecked, then remove representation (but only if it's not the source representation)
-  else if (segmentationNode->GetSegmentation()->GetMasterRepresentationName() !=
+  else if (segmentationNode->GetSegmentation()->GetSourceRepresentationName() !=
     vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName())
     {
     segmentationNode->GetSegmentation()->RemoveRepresentation(

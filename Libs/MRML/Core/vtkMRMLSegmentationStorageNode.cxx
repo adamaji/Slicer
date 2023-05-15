@@ -362,7 +362,7 @@ int vtkMRMLSegmentationStorageNode::ReadBinaryLabelmapRepresentation4DSpatial(vt
     }
 
   // Set source representation
-  segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
+  segmentation->SetSourceRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
 
   // Get metadata dictionary from image
   itk::MetaDataDictionary metadata = allSegmentLabelmapsImage->GetMetaDataDictionary();
@@ -677,7 +677,7 @@ int vtkMRMLSegmentationStorageNode::ReadBinaryLabelmapRepresentation(vtkMRMLSegm
     }
 
   // Set source representation
-  segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
+  segmentation->SetSourceRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
 
   // Compensate for the extent shift in the image origin.
   // We change the origin so that if a reader ignores private fields, such as
@@ -1022,7 +1022,7 @@ int vtkMRMLSegmentationStorageNode::ReadPolyDataRepresentation(vtkMRMLSegmentati
         return 0;
         }
       masterRepresentationName = masterRepresentationArray->GetValue(0);
-      segmentation->SetMasterRepresentationName(masterRepresentationName.c_str());
+      segmentation->SetSourceRepresentationName(masterRepresentationName.c_str());
       }
     // Read conversion parameters (stored in each segment file, but need to set only once)
     if ( conversionParameters.empty()
@@ -1043,7 +1043,7 @@ int vtkMRMLSegmentationStorageNode::ReadPolyDataRepresentation(vtkMRMLSegmentati
 
     // Create segment
     vtkSmartPointer<vtkSegment> currentSegment = vtkSmartPointer<vtkSegment>::New();
-    currentSegment->AddRepresentation(segmentation->GetMasterRepresentationName(), currentPolyData);
+    currentSegment->AddRepresentation(segmentation->GetSourceRepresentationName(), currentPolyData);
 
     // Set segment properties
 
@@ -1182,7 +1182,7 @@ int vtkMRMLSegmentationStorageNode::WriteDataInternal(vtkMRMLNode *refNode)
     }
 
   vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteDataInternal",
-    "Segmentation source representation " << segmentationNode->GetSegmentation()->GetMasterRepresentationName()
+    "Segmentation source representation " << segmentationNode->GetSegmentation()->GetSourceRepresentationName()
     << " cannot be written to file");
   return 0;
 }
@@ -1216,7 +1216,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
     std::string currentSegmentID = *segmentIdIt;
     vtkSegment* currentSegment = segmentation->GetSegment(*segmentIdIt);
     vtkSmartPointer<vtkOrientedImageData> currentBinaryLabelmap = vtkOrientedImageData::SafeDownCast(
-      currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetMasterRepresentationName()));
+      currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetSourceRepresentationName()));
     if (currentBinaryLabelmap->GetScalarSize() > scalarSize)
       {
       scalarSize = currentBinaryLabelmap->GetScalarSize();
@@ -1282,7 +1282,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
 
   // Save source representation name
   writer->SetAttribute(GetSegmentationMetaDataKey(KEY_SEGMENTATION_MASTER_REPRESENTATION).c_str(),
-    segmentationNode->GetSegmentation()->GetMasterRepresentationName());
+    segmentationNode->GetSegmentation()->GetSourceRepresentationName());
   // Save conversion parameters
   std::string conversionParameters = segmentation->SerializeAllConversionParameters();
   writer->SetAttribute(GetSegmentationMetaDataKey(KEY_SEGMENTATION_CONVERSION_PARAMETERS).c_str(), conversionParameters);
@@ -1304,7 +1304,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
 
     // Get source representation from segment
     vtkSmartPointer<vtkOrientedImageData> currentBinaryLabelmap = vtkOrientedImageData::SafeDownCast(
-      currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetMasterRepresentationName()));
+      currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetSourceRepresentationName()));
     if (!currentBinaryLabelmap)
       {
       vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation",
@@ -1379,7 +1379,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
     labelValueSS << currentSegment->GetLabelValue();
     writer->SetAttribute(GetSegmentMetaDataKey(segmentIndex, KEY_SEGMENT_LABEL_VALUE).c_str(), labelValueSS.str());
 
-    vtkDataObject* originalRepresentation = currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetMasterRepresentationName());
+    vtkDataObject* originalRepresentation = currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetSourceRepresentationName());
     if (labelmapLayers.find(originalRepresentation) == labelmapLayers.end())
       {
       labelmapLayers[originalRepresentation] = layerIndex;
@@ -1454,7 +1454,7 @@ int vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation(vtkMRMLSegmentat
 
     // Get source representation from segment
     vtkPolyData* currentPolyData = vtkPolyData::SafeDownCast(currentSegment->GetRepresentation(
-      segmentationNode->GetSegmentation()->GetMasterRepresentationName()));
+      segmentationNode->GetSegmentation()->GetSourceRepresentationName()));
     if (!currentPolyData)
       {
       vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation",
@@ -1471,7 +1471,7 @@ int vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation(vtkMRMLSegmentat
     // MasterRepresentation
     vtkSmartPointer<vtkStringArray> masterRepresentationArray = vtkSmartPointer<vtkStringArray>::New();
     masterRepresentationArray->SetNumberOfValues(1);
-    masterRepresentationArray->SetValue(0, segmentationNode->GetSegmentation()->GetMasterRepresentationName());
+    masterRepresentationArray->SetValue(0, segmentationNode->GetSegmentation()->GetSourceRepresentationName());
     masterRepresentationArray->SetName(GetSegmentationMetaDataKey(KEY_SEGMENTATION_MASTER_REPRESENTATION).c_str());
     currentPolyDataCopy->GetFieldData()->AddArray(masterRepresentationArray);
 
@@ -1634,7 +1634,7 @@ void vtkMRMLSegmentationStorageNode::CreateRepresentationsBySerializedNames(vtkS
     return;
     }
 
-  std::string masterRepresentation(segmentation->GetMasterRepresentationName());
+  std::string masterRepresentation(segmentation->GetSourceRepresentationName());
   size_t separatorPosition = representationNames.find(SERIALIZATION_SEPARATOR);
   while (separatorPosition != std::string::npos)
     {
