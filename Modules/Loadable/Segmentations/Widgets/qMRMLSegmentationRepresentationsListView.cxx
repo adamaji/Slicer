@@ -416,7 +416,7 @@ void qMRMLSegmentationRepresentationsListView::makeMaster()
       tr("Changing source representation will make the 'gold standard' representation the selected one, "
       "and will result in deletion of all the other representations.\n"
       "This may mean losing important data that cannot be created again from the new source representation.\n\n"
-      "(Reminder: Master representation is the data type which is saved to disk, and which is used as input when creating other representations)\n\n"
+      "(Reminder: Source representation is the data type which is saved to disk, and which is used as input when creating other representations)\n\n"
       "Do you wish to proceed with changing source representation?"),
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer != QMessageBox::Yes)

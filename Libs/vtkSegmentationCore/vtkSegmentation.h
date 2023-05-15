@@ -66,7 +66,7 @@ class vtkStringArray;
 ///       cost is used (rules have a cost field that gives a ballpark value for the conversion cost)
 ///     * Representation types can be defined by registering conversion algorithms (rules) that specify their source and target
 ///       representations, and an estimated cost metric
-///   * Master representation
+///   * Source representation
 ///     * Privileged representation type. Can be any of the available representations, but usually it's the original representation
 ///       of the data (binary labelmap for editing, binary or fractional labelmap for DICOM SEG, planar contour for DICOM RT, etc.)
 ///       * Using the proper source representation ensures that no information is lost, which is crucial to avoid discrepancies that can
@@ -534,7 +534,7 @@ protected:
   /// Container of segments that belong to this segmentation
   SegmentMap Segments;
 
-  /// Master representation type name.
+  /// Source representation type name.
   /// 1. This representation is saved on disk
   /// 2. If this representation is modified, the others are invalidated
   /// This value must be set by the creator of the segmentation object!

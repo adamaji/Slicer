@@ -354,7 +354,7 @@ public:
     std::string segmentID, vtkPolyData* polyData, bool applyParentTransform = true);
 
   /// Set a labelmap image as binary labelmap representation into the segment defined by the segmentation node and segment ID.
-  /// Master representation must be binary labelmap! Master representation changed event is disabled to prevent deletion of all
+  /// Source representation must be binary labelmap! Source representation changed event is disabled to prevent deletion of all
   /// other representation in all segments. The other representations in the given segment are re-converted. The extent of the
   /// segment binary labelmap is shrunk to the effective extent. Display update is triggered.
   /// \param mergeMode Determines if the labelmap should replace the segment, combined with a maximum or minimum operation, or set under the mask.

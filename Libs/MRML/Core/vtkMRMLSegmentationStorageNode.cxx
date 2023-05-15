@@ -227,7 +227,7 @@ const char* vtkMRMLSegmentationStorageNode::GetDefaultWriteFileExtension()
     {
     return "seg.vtm";
     }
-  // Master representation is not supported for writing to file
+  // Source representation is not supported for writing to file
   return nullptr;
 }
 

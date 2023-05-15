@@ -545,7 +545,7 @@ bool vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode()
     && masterRepresentationName != vtkSegmentationConverter::GetFractionalLabelmapRepresentationName() )
     {
     vtkErrorMacro("vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode: "
-      << "Master representation needs to be a labelmap type, but '" << masterRepresentationName.c_str() << "' found");
+      << "Source representation needs to be a labelmap type, but '" << masterRepresentationName.c_str() << "' found");
     return false;
     }
 

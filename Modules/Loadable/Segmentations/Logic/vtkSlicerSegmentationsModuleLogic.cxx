@@ -1589,7 +1589,7 @@ bool vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode(
   if (segmentationNode->GetSegmentation()->GetMasterRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
     {
     vtkErrorWithObjectMacro(segmentationNode, "vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode:"
-      "Master representation of the target segmentation node "
+      "Source representation of the target segmentation node "
       << (segmentationNode->GetName() ? segmentationNode->GetName() : "NULL") << " is not binary labelmap");
     return false;
     }

@@ -393,8 +393,8 @@ QString qSlicerSubjectHierarchySegmentationsPlugin::tooltip(vtkIdType itemID)con
     tooltipString = tooltipString.left(tooltipString.length()-2).append(")");
     }
 
-  // Master representation
-  tooltipString.append(tr(" (Master representation: %1)").arg(segmentation->GetMasterRepresentationName().c_str()));  //: parameter is the representation name
+  // Source representation
+  tooltipString.append(tr(" (Source representation: %1)").arg(segmentation->GetMasterRepresentationName().c_str()));  //: parameter is the representation name
 
   // Number of segments
   tooltipString.append(tr(" (Number of segments: %1)").arg(segmentation->GetNumberOfSegments()));

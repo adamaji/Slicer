@@ -271,7 +271,7 @@ int vtkSegmentationTest1(int vtkNotUsed(argc), char* vtkNotUsed(argv)[])
     }
   if (!nonMasterSegment->GetRepresentation(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName()))
     {
-    std::cerr << __LINE__ << ": Master representation was not created when adding non-master segment to segmentation!" << std::endl;
+    std::cerr << __LINE__ << ": Source representation was not created when adding non-master segment to segmentation!" << std::endl;
     return EXIT_FAILURE;
     }
 
