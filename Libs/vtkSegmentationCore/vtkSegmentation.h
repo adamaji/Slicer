@@ -300,10 +300,24 @@ public:
   bool ContainsRepresentation(std::string representationName);
 
   /// Determine if source representation is poly data type
-  bool IsMasterRepresentationPolyData();
+  bool IsSourceRepresentationPolyData();
 
   /// Determine if source representation is (oriented) image data type
-  bool IsMasterRepresentationImageData();
+  bool IsSourceRepresentationImageData();
+
+  /// Deprecated. Use IsSourceRepresentationPolyData method instead.
+  bool IsMasterRepresentationPolyData()
+    {
+      qWarning("vtkSegmentation::IsMasterRepresentationPolyData is deprecated, use IsSourceRepresentationPolyData method instead.");
+      return this->IsSourceRepresentationPolyData();
+    }
+
+  /// Deprecated. Use IsSourceRepresentationImageData method instead.
+  bool IsMasterRepresentationImageData()
+    {
+      qWarning("vtkSegmentation::IsMasterRepresentationImageData is deprecated, use IsSourceRepresentationImageData method instead.");
+      return this->IsSourceRepresentationImageData();
+    }
 
   /// Get all representations supported by the converter
   void GetAvailableRepresentationNames(std::set<std::string>& representationNames) { this->Converter->GetAvailableRepresentationNames(representationNames); };

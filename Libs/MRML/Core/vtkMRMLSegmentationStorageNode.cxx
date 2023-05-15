@@ -162,8 +162,8 @@ void vtkMRMLSegmentationStorageNode::InitializeSupportedWriteFileTypes()
   if (segmentationNode)
     {
     // restrict write file types to those that are suitable for current source representation
-    masterIsImage = segmentationNode->GetSegmentation()->IsMasterRepresentationImageData();
-    masterIsPolyData = segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData();
+    masterIsImage = segmentationNode->GetSegmentation()->IsSourceRepresentationImageData();
+    masterIsPolyData = segmentationNode->GetSegmentation()->IsSourceRepresentationPolyData();
     if (!masterIsImage && !masterIsPolyData)
       {
       // if contains unknown representation then enable all formats
@@ -219,11 +219,11 @@ const char* vtkMRMLSegmentationStorageNode::GetDefaultWriteFileExtension()
     {
     return nullptr;
     }
-  if (segmentationNode->GetSegmentation()->IsMasterRepresentationImageData())
+  if (segmentationNode->GetSegmentation()->IsSourceRepresentationImageData())
     {
     return "seg.nrrd";
     }
-  else if (segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData())
+  else if (segmentationNode->GetSegmentation()->IsSourceRepresentationPolyData())
     {
     return "seg.vtm";
     }
@@ -1172,11 +1172,11 @@ int vtkMRMLSegmentationStorageNode::WriteDataInternal(vtkMRMLNode *refNode)
     }
 
   // Write only source representation
-  if (segmentationNode->GetSegmentation()->IsMasterRepresentationImageData())
+  if (segmentationNode->GetSegmentation()->IsSourceRepresentationImageData())
     {
     return this->WriteBinaryLabelmapRepresentation(segmentationNode, fullName);
     }
-  else if (segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData())
+  else if (segmentationNode->GetSegmentation()->IsSourceRepresentationPolyData())
     {
     return this->WritePolyDataRepresentation(segmentationNode, fullName);
     }
@@ -1200,7 +1200,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
   segmentation->CollapseBinaryLabelmaps(false);
 
   // Get and check source representation
-  if (!segmentationNode->GetSegmentation()->IsMasterRepresentationImageData())
+  if (!segmentationNode->GetSegmentation()->IsSourceRepresentationImageData())
     {
     vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation",
       "Invalid source representation to write as image data");
@@ -1432,7 +1432,7 @@ int vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation(vtkMRMLSegmentat
   vtkSegmentation* segmentation = segmentationNode->GetSegmentation();
 
   // Get and check source representation
-  if (!segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData())
+  if (!segmentationNode->GetSegmentation()->IsSourceRepresentationPolyData())
     {
     vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation",
       "Invalid source representation to write as poly data");

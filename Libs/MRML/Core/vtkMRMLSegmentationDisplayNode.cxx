@@ -1006,7 +1006,7 @@ std::string vtkMRMLSegmentationDisplayNode::GetDisplayRepresentationName3D()
     }
 
   // Otherwise if source representation is poly data then use that
-  if (segmentation->IsMasterRepresentationPolyData())
+  if (segmentation->IsSourceRepresentationPolyData())
     {
     return std::string(segmentation->GetMasterRepresentationName());
     }

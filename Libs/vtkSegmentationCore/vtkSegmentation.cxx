@@ -1690,7 +1690,7 @@ bool vtkSegmentation::ContainsRepresentation(std::string representationName)
 }
 
 //-----------------------------------------------------------------------------
-bool vtkSegmentation::IsMasterRepresentationPolyData()
+bool vtkSegmentation::IsSourceRepresentationPolyData()
 {
   if (!this->Segments.empty())
     {
@@ -1709,7 +1709,7 @@ bool vtkSegmentation::IsMasterRepresentationPolyData()
 }
 
 //-----------------------------------------------------------------------------
-bool vtkSegmentation::IsMasterRepresentationImageData()
+bool vtkSegmentation::IsSourceRepresentationImageData()
 {
   if (!this->Segments.empty())
     {
