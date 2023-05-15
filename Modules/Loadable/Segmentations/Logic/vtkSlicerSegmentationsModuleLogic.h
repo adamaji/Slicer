@@ -418,7 +418,7 @@ public:
   static bool GetSharedSegmentIDsInMask(vtkMRMLSegmentationNode* segmentationNode, std::string sharedSegmentID, vtkOrientedImageData* mask, const int extent[6],
     std::vector<std::string>& segmentIDs, int maskThreshold = 0.0, bool includeInputSharedSegmentID = false);
 
-  /// Reconvert all representations in the segmentation from the master representation
+  /// Reconvert all representations in the segmentation from the source representation
   /// \param segmentationNode Node containing the segmentation
   /// \param sharedSegmentID Segment IDs to be converted. If empty, all segments will be converted.
   /// \return True if the representation was created, False otherwise

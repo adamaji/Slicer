@@ -474,7 +474,7 @@ void vtkMRMLSegmentationNode::ApplyTransform(vtkAbstractTransform* transform)
   this->Segmentation->InvalidateNonMasterRepresentations();
 
   // Make sure preferred display representations exist after transformation
-  // (it is invalidated in the process unless it is the master representation)
+  // (it is invalidated in the process unless it is the source representation)
   char* preferredDisplayRepresentation2D = nullptr;
   char* preferredDisplayRepresentation3D = nullptr;
   vtkMRMLSegmentationDisplayNode* displayNode = vtkMRMLSegmentationDisplayNode::SafeDownCast(this->GetDisplayNode());
@@ -485,7 +485,7 @@ void vtkMRMLSegmentationNode::ApplyTransform(vtkAbstractTransform* transform)
     }
 
   // Make sure preferred display representations exist after transformation
-  // (it was invalidated in the process unless it is the master representation)
+  // (it was invalidated in the process unless it is the source representation)
   if (displayNode)
     {
     if (preferredDisplayRepresentation2D)

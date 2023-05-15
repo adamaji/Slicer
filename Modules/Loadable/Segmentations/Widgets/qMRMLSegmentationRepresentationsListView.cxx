@@ -207,7 +207,7 @@ void qMRMLSegmentationRepresentationsListView::populateRepresentationsList()
     if (master)
       {
       representationItem->setIcon(QIcon(":/Icons/Master.png"));
-      representationItem->setToolTip(tr("This is the master representation.\n  1. This representation is saved on disk\n  2. If this representation is modified, the others are cleared"));
+      representationItem->setToolTip(tr("This is the source representation.\n  1. This representation is saved on disk\n  2. If this representation is modified, the others are cleared"));
       }
     else if (present)
       {
@@ -313,7 +313,7 @@ void qMRMLSegmentationRepresentationsListView::createRepresentationDefault()
   QApplication::setOverrideCursor(QCursor(Qt::BusyCursor));
   if (!d->SegmentationNode->GetSegmentation()->CreateRepresentation(representationName.toUtf8().constData()))
     {
-    QString message = tr("Failed to convert %1 to %2!\n\nProbably there is no valid conversion path between the master representation and %2")
+    QString message = tr("Failed to convert %1 to %2!\n\nProbably there is no valid conversion path between the source representation and %2")
       .arg(d->SegmentationNode->GetName()).arg(representationName);
     QMessageBox::warning(nullptr, tr("Conversion failed"), message);
     }
@@ -410,14 +410,14 @@ void qMRMLSegmentationRepresentationsListView::makeMaster()
 
   if (d->SegmentationNode->GetSegmentation()->GetNumberOfSegments() > 0)
     {
-    // Warn user about the consequences of changing master representation
+    // Warn user about the consequences of changing source representation
     QMessageBox::StandardButton answer =
-      QMessageBox::question(nullptr, tr("Confirm master representation change"),
-      tr("Changing master representation will make the 'gold standard' representation the selected one, "
+      QMessageBox::question(nullptr, tr("Confirm source representation change"),
+      tr("Changing source representation will make the 'gold standard' representation the selected one, "
       "and will result in deletion of all the other representations.\n"
-      "This may mean losing important data that cannot be created again from the new master representation.\n\n"
+      "This may mean losing important data that cannot be created again from the new source representation.\n\n"
       "(Reminder: Master representation is the data type which is saved to disk, and which is used as input when creating other representations)\n\n"
-      "Do you wish to proceed with changing master representation?"),
+      "Do you wish to proceed with changing source representation?"),
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer != QMessageBox::Yes)
       {

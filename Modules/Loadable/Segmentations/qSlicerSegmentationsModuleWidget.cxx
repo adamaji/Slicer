@@ -777,8 +777,8 @@ bool qSlicerSegmentationsModuleWidget::copySegmentBetweenSegmentations(
       return false;
       }
 
-    QString message = tr("Cannot convert source master representation '%1' into target master '%2', "
-      "thus unable to copy segment '%3' from segmentation '%4' to '%5'.\n\nWould you like to change the master representation of '%5' to '%1'?\n\n"
+    QString message = tr("Cannot convert source source representation '%1' into target master '%2', "
+      "thus unable to copy segment '%3' from segmentation '%4' to '%5'.\n\nWould you like to change the source representation of '%5' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %5.")
       .arg(fromSegmentation->GetMasterRepresentationName().c_str())
       .arg(toSegmentation->GetMasterRepresentationName().c_str()).arg(segmentId).arg(fromNode->GetName()).arg(toNode->GetName());
@@ -787,7 +787,7 @@ bool qSlicerSegmentationsModuleWidget::copySegmentBetweenSegmentations(
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer == QMessageBox::Yes)
       {
-      // Convert target segmentation to master representation of source segmentation
+      // Convert target segmentation to source representation of source segmentation
       bool successfulConversion = toSegmentation->CreateRepresentation(fromSegmentation->GetMasterRepresentationName());
       if (!successfulConversion)
         {
@@ -796,7 +796,7 @@ bool qSlicerSegmentationsModuleWidget::copySegmentBetweenSegmentations(
         return false;
         }
 
-      // Change master representation of target to that of source
+      // Change source representation of target to that of source
       toSegmentation->SetMasterRepresentationName(fromSegmentation->GetMasterRepresentationName());
 
       // Retry copy of segment

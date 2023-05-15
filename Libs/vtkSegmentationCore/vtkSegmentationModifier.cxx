@@ -100,7 +100,7 @@ bool vtkSegmentationModifier::ModifyBinaryLabelmap(
   // Shrink the image data extent to only contain the effective data (extent of non-zero voxels)
   vtkSegmentationModifier::ShrinkSegmentToEffectiveExtent(segmentLabelmap);
 
-  // Re-enable master representation modified event
+  // Re-enable source representation modified event
   segmentation->SetMasterRepresentationModifiedEnabled(wasMasterRepresentationModifiedEnabled);
   if (segmentLabelmapModified)
     {

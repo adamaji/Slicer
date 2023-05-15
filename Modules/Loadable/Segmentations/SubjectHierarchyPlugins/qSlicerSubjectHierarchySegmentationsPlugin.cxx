@@ -278,10 +278,10 @@ bool qSlicerSubjectHierarchySegmentationsPlugin::reparentItemInsideSubjectHierar
   // Notify user if failed to import
   if (!success)
     {
-    // Probably master representation has to be changed
-    QString message = tr("Cannot convert source master representation '%1' into target master '%2',"
+    // Probably source representation has to be changed
+    QString message = tr("Cannot convert source source representation '%1' into target master '%2',"
       "thus unable to import node '%3' to segmentation '%4'.\n\n"
-      "Would you like to change the master representation of '%4' to '%1'?\n\n"
+      "Would you like to change the source representation of '%4' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %4.")
       .arg(importedRepresentationName.c_str())
       .arg(segmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
@@ -291,7 +291,7 @@ bool qSlicerSubjectHierarchySegmentationsPlugin::reparentItemInsideSubjectHierar
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer == QMessageBox::Yes)
       {
-      // Convert target segmentation to master representation of source segmentation
+      // Convert target segmentation to source representation of source segmentation
       bool successfulConversion = segmentationNode->GetSegmentation()->CreateRepresentation(importedRepresentationName);
       if (!successfulConversion)
         {
@@ -300,7 +300,7 @@ bool qSlicerSubjectHierarchySegmentationsPlugin::reparentItemInsideSubjectHierar
         return false;
         }
 
-      // Change master representation of target to that of source
+      // Change source representation of target to that of source
       segmentationNode->GetSegmentation()->SetMasterRepresentationName(importedRepresentationName);
 
       // Retry reparenting

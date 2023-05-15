@@ -161,7 +161,7 @@ void vtkMRMLSegmentationStorageNode::InitializeSupportedWriteFileTypes()
   bool masterIsPolyData = true;
   if (segmentationNode)
     {
-    // restrict write file types to those that are suitable for current master representation
+    // restrict write file types to those that are suitable for current source representation
     masterIsImage = segmentationNode->GetSegmentation()->IsMasterRepresentationImageData();
     masterIsPolyData = segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData();
     if (!masterIsImage && !masterIsPolyData)
@@ -361,7 +361,7 @@ int vtkMRMLSegmentationStorageNode::ReadBinaryLabelmapRepresentation4DSpatial(vt
     segmentation->RemoveAllSegments();
     }
 
-  // Set master representation
+  // Set source representation
   segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
 
   // Get metadata dictionary from image
@@ -676,7 +676,7 @@ int vtkMRMLSegmentationStorageNode::ReadBinaryLabelmapRepresentation(vtkMRMLSegm
     segmentation->RemoveAllSegments();
     }
 
-  // Set master representation
+  // Set source representation
   segmentation->SetMasterRepresentationName(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName());
 
   // Compensate for the extent shift in the image origin.
@@ -1009,7 +1009,7 @@ int vtkMRMLSegmentationStorageNode::ReadPolyDataRepresentation(vtkMRMLSegmentati
       continue;
       }
 
-    // Set master representation if it has not been set yet
+    // Set source representation if it has not been set yet
     // (there is no global place to store it, but every segment field data contains a copy of it)
     if (masterRepresentationName.empty())
       {
@@ -1018,7 +1018,7 @@ int vtkMRMLSegmentationStorageNode::ReadPolyDataRepresentation(vtkMRMLSegmentati
       if (!masterRepresentationArray)
         {
         vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::ReadPolyDataRepresentation",
-          "Unable to find master representation for segmentation in file " << path);
+          "Unable to find source representation for segmentation in file " << path);
         return 0;
         }
       masterRepresentationName = masterRepresentationArray->GetValue(0);
@@ -1171,7 +1171,7 @@ int vtkMRMLSegmentationStorageNode::WriteDataInternal(vtkMRMLNode *refNode)
     return 0;
     }
 
-  // Write only master representation
+  // Write only source representation
   if (segmentationNode->GetSegmentation()->IsMasterRepresentationImageData())
     {
     return this->WriteBinaryLabelmapRepresentation(segmentationNode, fullName);
@@ -1182,7 +1182,7 @@ int vtkMRMLSegmentationStorageNode::WriteDataInternal(vtkMRMLNode *refNode)
     }
 
   vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteDataInternal",
-    "Segmentation master representation " << segmentationNode->GetSegmentation()->GetMasterRepresentationName()
+    "Segmentation source representation " << segmentationNode->GetSegmentation()->GetMasterRepresentationName()
     << " cannot be written to file");
   return 0;
 }
@@ -1199,11 +1199,11 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
   vtkSegmentation* segmentation = segmentationNode->GetSegmentation();
   segmentation->CollapseBinaryLabelmaps(false);
 
-  // Get and check master representation
+  // Get and check source representation
   if (!segmentationNode->GetSegmentation()->IsMasterRepresentationImageData())
     {
     vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation",
-      "Invalid master representation to write as image data");
+      "Invalid source representation to write as image data");
     return 0;
     }
 
@@ -1280,7 +1280,7 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
   vtkMatrix4x4::Invert(rasToFileIjk.GetPointer(), fileIjkToRas.GetPointer());
   writer->SetIJKToRASMatrix(fileIjkToRas.GetPointer());
 
-  // Save master representation name
+  // Save source representation name
   writer->SetAttribute(GetSegmentationMetaDataKey(KEY_SEGMENTATION_MASTER_REPRESENTATION).c_str(),
     segmentationNode->GetSegmentation()->GetMasterRepresentationName());
   // Save conversion parameters
@@ -1302,13 +1302,13 @@ int vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation(vtkMRMLSeg
     std::string currentSegmentID = *segmentIdIt;
     vtkSegment* currentSegment = segmentation->GetSegment(*segmentIdIt);
 
-    // Get master representation from segment
+    // Get source representation from segment
     vtkSmartPointer<vtkOrientedImageData> currentBinaryLabelmap = vtkOrientedImageData::SafeDownCast(
       currentSegment->GetRepresentation(segmentationNode->GetSegmentation()->GetMasterRepresentationName()));
     if (!currentBinaryLabelmap)
       {
       vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WriteBinaryLabelmapRepresentation",
-        "Failed to retrieve master representation from segment " << currentSegmentID);
+        "Failed to retrieve source representation from segment " << currentSegmentID);
       continue;
       }
 
@@ -1431,11 +1431,11 @@ int vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation(vtkMRMLSegmentat
     }
   vtkSegmentation* segmentation = segmentationNode->GetSegmentation();
 
-  // Get and check master representation
+  // Get and check source representation
   if (!segmentationNode->GetSegmentation()->IsMasterRepresentationPolyData())
     {
     vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation",
-      "Invalid master representation to write as poly data");
+      "Invalid source representation to write as poly data");
     return 0;
     }
 
@@ -1452,17 +1452,17 @@ int vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation(vtkMRMLSegmentat
     std::string currentSegmentID = *segmentIdIt;
     vtkSegment* currentSegment = segmentation->GetSegment(*segmentIdIt);
 
-    // Get master representation from segment
+    // Get source representation from segment
     vtkPolyData* currentPolyData = vtkPolyData::SafeDownCast(currentSegment->GetRepresentation(
       segmentationNode->GetSegmentation()->GetMasterRepresentationName()));
     if (!currentPolyData)
       {
       vtkErrorToMessageCollectionMacro(this->GetUserMessages(), "vtkMRMLSegmentationStorageNode::WritePolyDataRepresentation",
-        "Failed to retrieve master representation from segment " << currentSegmentID);
+        "Failed to retrieve source representation from segment " << currentSegmentID);
       continue;
       }
     // Make temporary duplicate of the poly data so that adding the metadata does not cause invalidating the other
-    // representations (which is done when the master representation is modified)
+    // representations (which is done when the source representation is modified)
     vtkSmartPointer<vtkPolyData> currentPolyDataCopy = vtkSmartPointer<vtkPolyData>::New();
     currentPolyDataCopy->ShallowCopy(currentPolyData);
 
@@ -1640,7 +1640,7 @@ void vtkMRMLSegmentationStorageNode::CreateRepresentationsBySerializedNames(vtkS
     {
     std::string representationName = representationNames.substr(0, separatorPosition);
 
-    // Only create non-master representations
+    // Only create non-source representations
     if (representationName.compare(masterRepresentation))
       {
       segmentation->CreateRepresentation(representationName);

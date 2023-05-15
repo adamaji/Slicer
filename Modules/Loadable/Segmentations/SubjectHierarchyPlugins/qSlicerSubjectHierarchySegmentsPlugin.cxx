@@ -224,7 +224,7 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
   // Notify user if failed to reparent
   if (!success)
     {
-    // If the two master representations are the same, then probably the segment IDs were duplicate
+    // If the two source representations are the same, then probably the segment IDs were duplicate
     if (fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() == toSegmentationNode->GetSegmentation()->GetMasterRepresentationName())
       {
       QString message = tr("Segment ID of the moved segment (%1) might exist in the target segmentation.\n"
@@ -233,10 +233,10 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
       return false;
       }
 
-    // Otherwise master representation has to be changed
-    QString message = tr("Cannot convert source master representation '%1' into target master '%2',"
+    // Otherwise source representation has to be changed
+    QString message = tr("Cannot convert source source representation '%1' into target master '%2',"
       "thus unable to move segment '%3' from segmentation '%4' to '%5'.\n\n"
-      "Would you like to change the master representation of '%5' to '%1'?\n\n"
+      "Would you like to change the source representation of '%5' to '%1'?\n\n"
       "Note: This may result in unwanted data loss in %5.")
       .arg(fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
       .arg(toSegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str())
@@ -246,7 +246,7 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer == QMessageBox::Yes)
       {
-      // Convert target segmentation to master representation of source segmentation
+      // Convert target segmentation to source representation of source segmentation
       bool successfulConversion = toSegmentationNode->GetSegmentation()->CreateRepresentation(
         fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() );
       if (!successfulConversion)
@@ -257,7 +257,7 @@ bool qSlicerSubjectHierarchySegmentsPlugin::reparentItemInsideSubjectHierarchy(v
         return false;
         }
 
-      // Change master representation of target to that of source
+      // Change source representation of target to that of source
       toSegmentationNode->GetSegmentation()->SetMasterRepresentationName(
         fromSegmentationNode->GetSegmentation()->GetMasterRepresentationName() );
 

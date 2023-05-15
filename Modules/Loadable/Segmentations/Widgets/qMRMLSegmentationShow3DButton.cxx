@@ -251,7 +251,7 @@ void qMRMLSegmentationShow3DButton::onToggled(bool on)
   else
     {
     // Button is released, remove the closed surface representation
-    // (but only if it's not the master representation).
+    // (but only if it's not the source representation).
     if (d->SegmentationNode->GetSegmentation()->GetMasterRepresentationName() !=
       vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName())
       {

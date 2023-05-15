@@ -91,7 +91,7 @@ class SegmentationsModuleTest1(unittest.TestCase):
         slicer.util.loadVolume(self.dataDir + '/TinyPatient_CT.nrrd')
         slicer.util.loadNodeFromFile(self.dataDir + '/TinyPatient_Structures.seg.vtm', "SegmentationFile", {})
 
-        # Change master representation to closed surface (so that conversion is possible when adding segment)
+        # Change source representation to closed surface (so that conversion is possible when adding segment)
         self.inputSegmentationNode = slicer.util.getNode('vtkMRMLSegmentationNode1')
         self.inputSegmentationNode.GetSegmentation().SetMasterRepresentationName(self.closedSurfaceReprName)
 

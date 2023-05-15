@@ -539,7 +539,7 @@ bool vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode()
     return false;
     }
 
-  // Check if master representation is binary or fractional labelmap (those are the only supported representations in segment editor)
+  // Check if source representation is binary or fractional labelmap (those are the only supported representations in segment editor)
   std::string masterRepresentationName = this->InputSegmentationNode->GetSegmentation()->GetMasterRepresentationName();
   if ( masterRepresentationName != vtkSegmentationConverter::GetBinaryLabelmapRepresentationName()
     && masterRepresentationName != vtkSegmentationConverter::GetFractionalLabelmapRepresentationName() )
@@ -566,7 +566,7 @@ bool vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode()
     if (!currentLabelmap)
       {
       vtkErrorMacro("vtkSlicerSegmentationGeometryLogic::ResampleLabelmapsInSegmentationNode: "
-        << "Failed to retrieve master representation from segment " << currentSegmentID.c_str());
+        << "Failed to retrieve source representation from segment " << currentSegmentID.c_str());
       continue;
       }
 

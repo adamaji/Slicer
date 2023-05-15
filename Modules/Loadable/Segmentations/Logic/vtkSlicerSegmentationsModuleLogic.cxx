@@ -300,7 +300,7 @@ vtkMRMLSegmentationNode* vtkSlicerSegmentationsModuleLogic::LoadSegmentationFrom
     }
 
   // Show closed surface poly data if it exist. By default the preferred representation is shown,
-  // but we do not have a display node for the segmentation here. In its absence the master representation
+  // but we do not have a display node for the segmentation here. In its absence the source representation
   // is shown if it's poly data, but closed surface model is specifically for 3D visualization)
   if (segmentationNode->GetSegmentation()->ContainsRepresentation(
     vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName()) )
@@ -1584,8 +1584,8 @@ bool vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode(
     return false;
     }
 
-  // If master representation is not binary labelmap, then cannot add
-  // (this should have been done by the UI classes, notifying the users about hazards of changing the master representation)
+  // If source representation is not binary labelmap, then cannot add
+  // (this should have been done by the UI classes, notifying the users about hazards of changing the source representation)
   if (segmentationNode->GetSegmentation()->GetMasterRepresentationName() != vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
     {
     vtkErrorWithObjectMacro(segmentationNode, "vtkSlicerSegmentationsModuleLogic::ImportLabelmapToSegmentationNode:"

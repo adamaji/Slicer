@@ -67,7 +67,7 @@ protected slots:
   /// Remove selected representation
   void removeRepresentation();
 
-  /// Make selected representation the master representation in segmentation
+  /// Make selected representation the source representation in segmentation
   void makeMaster();
 
 protected:

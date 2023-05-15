@@ -209,11 +209,11 @@ public:
 
   // Convenience functions for commonly needed features
 
-  /// Change master representation. All other representations are automatically computed
-  /// from the master representation.
+  /// Change source representation. All other representations are automatically computed
+  /// from the source representation.
   virtual bool SetMasterRepresentationToBinaryLabelmap();
-  /// Change master representation. All other representations are automatically computed
-  /// from the master representation.
+  /// Change source representation. All other representations are automatically computed
+  /// from the source representation.
   virtual bool SetMasterRepresentationToClosedSurface();
 
   /// Generate binary labelmap representation for all segments.
@@ -314,7 +314,7 @@ protected:
   /// Callback function for all events from the segmentation object.
   static void SegmentationModifiedCallback(vtkObject* caller, unsigned long eid, void* clientData, void* callData);
 
-  /// Callback function observing the master representation of the segmentation (and each segment within)
+  /// Callback function observing the source representation of the segmentation (and each segment within)
   /// Invalidates all representations other than the master. These representations will be automatically converted later on demand.
   void OnMasterRepresentationModified();
 

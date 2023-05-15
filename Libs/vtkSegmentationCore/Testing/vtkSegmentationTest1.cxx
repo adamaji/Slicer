@@ -266,7 +266,7 @@ int vtkSegmentationTest1(int vtkNotUsed(argc), char* vtkNotUsed(argv)[])
   cubeSegmentation->AddSegment(nonMasterSegment.GetPointer());
   if (cubeSegmentation->GetNumberOfSegments() != 2)
     {
-    std::cerr << __LINE__ << ": Failed to add segment with non-master representation to segmentation!" << std::endl;
+    std::cerr << __LINE__ << ": Failed to add segment with non-source representation to segmentation!" << std::endl;
     return EXIT_FAILURE;
     }
   if (!nonMasterSegment->GetRepresentation(vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName()))

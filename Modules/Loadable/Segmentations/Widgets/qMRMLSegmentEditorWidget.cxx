@@ -1359,25 +1359,25 @@ bool qMRMLSegmentEditorWidget::setMasterRepresentationToBinaryLabelmap()
 
   if (d->SegmentationNode->GetSegmentation()->GetMasterRepresentationName() == vtkSegmentationConverter::GetSegmentationBinaryLabelmapRepresentationName())
     {
-    // Current master representation is already binary labelmap
+    // Current source representation is already binary labelmap
     return true;
     }
 
   MRMLNodeModifyBlocker blocker(d->SegmentationNode);
 
-  // Editing is only possible if binary labelmap is the master representation
+  // Editing is only possible if binary labelmap is the source representation
   // If master is not binary labelmap, then ask the user if they wants to make it master
-  QString message = tr("Editing requires binary labelmap master representation, but currently the master representation is %1. "
-    "Changing the master representation requires conversion. Some details may be lost during conversion process.\n\n"
-    "Change master representation to binary labelmap?").
+  QString message = tr("Editing requires binary labelmap source representation, but currently the source representation is %1. "
+    "Changing the source representation requires conversion. Some details may be lost during conversion process.\n\n"
+    "Change source representation to binary labelmap?").
     arg(d->SegmentationNode->GetSegmentation()->GetMasterRepresentationName().c_str());
   QMessageBox::StandardButton answer =
-    QMessageBox::question(nullptr, tr("Change master representation to binary labelmap?"), message,
+    QMessageBox::question(nullptr, tr("Change source representation to binary labelmap?"), message,
     QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
   if (answer != QMessageBox::Yes)
     {
     // User rejected the conversion
-    qDebug() << Q_FUNC_INFO << " failed: user rejected changing of master representation.";
+    qDebug() << Q_FUNC_INFO << " failed: user rejected changing of source representation.";
     return false;
     }
 
@@ -1669,8 +1669,8 @@ void qMRMLSegmentEditorWidget::updateEffectsSectionFromMRML()
 
   if (activeEffect && !this->setMasterRepresentationToBinaryLabelmap())
     {
-    // effect cannot be activated because master representation has to be binary labelmap
-    qDebug() << Q_FUNC_INFO << ": Cannot activate effect, failed to set binary labelmap as master representation.";
+    // effect cannot be activated because source representation has to be binary labelmap
+    qDebug() << Q_FUNC_INFO << ": Cannot activate effect, failed to set binary labelmap as source representation.";
     activeEffect = nullptr;
     }
 
@@ -2346,7 +2346,7 @@ void qMRMLSegmentEditorWidget::onCreateSurfaceToggled(bool on)
         }
       }
     }
-  // If unchecked, then remove representation (but only if it's not the master representation)
+  // If unchecked, then remove representation (but only if it's not the source representation)
   else if (segmentationNode->GetSegmentation()->GetMasterRepresentationName() !=
     vtkSegmentationConverter::GetSegmentationClosedSurfaceRepresentationName())
     {

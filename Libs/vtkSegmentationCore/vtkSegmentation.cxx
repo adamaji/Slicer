@@ -213,12 +213,12 @@ void vtkSegmentation::SetMasterRepresentationName(const std::string& representat
     return;
     }
 
-  // Remove observation of old master representation in all segments
+  // Remove observation of old source representation in all segments
   bool wasMasterRepresentationModifiedEnabled = this->SetMasterRepresentationModifiedEnabled(false);
 
   this->MasterRepresentationName = representationName;
 
-  // Add observation of new master representation in all segments
+  // Add observation of new source representation in all segments
   this->SetMasterRepresentationModifiedEnabled(wasMasterRepresentationModifiedEnabled);
 
   // Invalidate all representations other than the master.
@@ -239,7 +239,7 @@ bool vtkSegmentation::SetMasterRepresentationModifiedEnabled(bool enabled)
     }
   this->MasterRepresentationModifiedEnabled = enabled;
 
-  // Add/remove observation of master representation in all segments
+  // Add/remove observation of source representation in all segments
   this->UpdateMasterRepresentationObservers();
   return !enabled; // return old value
 }
@@ -251,7 +251,7 @@ bool vtkSegmentation::SetSegmentModifiedEnabled(bool enabled)
     {
     return this->SegmentModifiedEnabled;
     }
-  // Add/remove observation of master representation in all segments
+  // Add/remove observation of source representation in all segments
   for (SegmentMap::iterator segmentIt = this->Segments.begin(); segmentIt != this->Segments.end(); ++segmentIt)
     {
     if (enabled)
@@ -337,7 +337,7 @@ bool vtkSegmentation::AddSegment(vtkSegment* segment, std::string segmentId/*=""
     std::vector<std::string> requiredRepresentationNames;
     if (this->Segments.empty())
       {
-      // No segments, so the only representation that should be created is the master representation.
+      // No segments, so the only representation that should be created is the source representation.
       requiredRepresentationNames.push_back(this->MasterRepresentationName);
       }
     else
@@ -380,11 +380,11 @@ bool vtkSegmentation::AddSegment(vtkSegment* segment, std::string segmentId/*=""
     // Add non-empty segment.
 
     // Perform necessary conversions if needed on the added segment:
-    // 1. If the segment can be added, and it does not contain the master representation,
-    // then the master representation is converted using the cheapest available path.
+    // 1. If the segment can be added, and it does not contain the source representation,
+    // then the source representation is converted using the cheapest available path.
     if (!segment->GetRepresentation(this->MasterRepresentationName))
       {
-      // Collect all available paths to master representation
+      // Collect all available paths to source representation
       vtkNew<vtkSegmentationConversionPaths> allPathsToMaster;
       for (std::vector<std::string>::iterator reprIt = containedRepresentationNamesInAddedSegment.begin();
         reprIt != containedRepresentationNamesInAddedSegment.end(); ++reprIt)
@@ -399,8 +399,8 @@ bool vtkSegmentation::AddSegment(vtkSegment* segment, std::string segmentId/*=""
         vtkSegmentationConverter::GetCheapestPath(allPathsToMaster);
       if (!cheapestPath || !this->ConvertSegmentUsingPath(segment, cheapestPath))
         {
-        // Return if cannot convert to master representation
-        vtkErrorMacro("AddSegment: Unable to create master representation!");
+        // Return if cannot convert to source representation
+        vtkErrorMacro("AddSegment: Unable to create source representation!");
         representationsCreated = false;
         }
       }
@@ -464,7 +464,7 @@ bool vtkSegmentation::AddSegment(vtkSegment* segment, std::string segmentId/*=""
     return false;
     }
 
-  // Add observation of master representation in new segment
+  // Add observation of source representation in new segment
   this->UpdateMasterRepresentationObservers();
 
   // Add to list. If segmentId is empty, then segment name becomes the ID
@@ -633,7 +633,7 @@ void vtkSegmentation::OnMasterRepresentationModified(vtkObject* vtkNotUsed(calle
 void vtkSegmentation::UpdateMasterRepresentationObservers()
 {
   std::set<vtkSmartPointer<vtkDataObject> > newMasterRepresentations;
-  // Add/remove observation of master representation in all segments
+  // Add/remove observation of source representation in all segments
   for (SegmentMap::iterator segmentIt = this->Segments.begin(); segmentIt != this->Segments.end(); ++segmentIt)
     {
     vtkDataObject* masterRepresentation = segmentIt->second->GetRepresentation(this->MasterRepresentationName);
@@ -643,7 +643,7 @@ void vtkSegmentation::UpdateMasterRepresentationObservers()
       }
     }
 
-  // Remove observers from master representations that are no longer in any segments
+  // Remove observers from source representations that are no longer in any segments
   for (vtkSmartPointer<vtkDataObject> masterRepresentation : this->MasterRepresentationCache)
     {
     if (std::find(newMasterRepresentations.begin(), newMasterRepresentations.end(), masterRepresentation) == newMasterRepresentations.end())
@@ -652,7 +652,7 @@ void vtkSegmentation::UpdateMasterRepresentationObservers()
       }
     }
 
-  // Add/remove observation of master representation in all segments
+  // Add/remove observation of source representation in all segments
   for (vtkSmartPointer<vtkDataObject> masterRepresentation : newMasterRepresentations)
     {
     if (this->MasterRepresentationModifiedEnabled)
@@ -921,14 +921,14 @@ void vtkSegmentation::ApplyLinearTransform(vtkAbstractTransform* transform)
   this->Converter->ApplyTransformOnReferenceImageGeometry(transform);
 
   // Apply linear transform for each segment:
-  // Harden transform on master representation if poly data, apply directions if oriented image data
+  // Harden transform on source representation if poly data, apply directions if oriented image data
   std::set<vtkDataObject*> transformedDataObjects;
   for (SegmentMap::iterator it = this->Segments.begin(); it != this->Segments.end(); ++it)
     {
     vtkDataObject* currentMasterRepresentation = it->second->GetRepresentation(this->MasterRepresentationName);
     if (!currentMasterRepresentation)
       {
-      vtkErrorMacro("ApplyLinearTransform: Cannot get master representation (" << this->MasterRepresentationName << ") from segment!");
+      vtkErrorMacro("ApplyLinearTransform: Cannot get source representation (" << this->MasterRepresentationName << ") from segment!");
       return;
       }
     if (transformedDataObjects.find(currentMasterRepresentation) != transformedDataObjects.end())
@@ -974,14 +974,14 @@ void vtkSegmentation::ApplyNonLinearTransform(vtkAbstractTransform* transform)
   // Apply transform on reference image geometry conversion parameter (to preserve validity of shared labelmap)
   this->Converter->ApplyTransformOnReferenceImageGeometry(transform);
 
-  // Harden transform on master representation (both image data and poly data) for each segment individually
+  // Harden transform on source representation (both image data and poly data) for each segment individually
   std::set<vtkDataObject*> transformedDataObjects;
   for (SegmentMap::iterator it = this->Segments.begin(); it != this->Segments.end(); ++it)
     {
     vtkDataObject* currentMasterRepresentation = it->second->GetRepresentation(this->MasterRepresentationName);
     if (!currentMasterRepresentation)
       {
-      vtkErrorMacro("ApplyNonLinearTransform: Cannot get master representation (" << this->MasterRepresentationName << ") from segment!");
+      vtkErrorMacro("ApplyNonLinearTransform: Cannot get source representation (" << this->MasterRepresentationName << ") from segment!");
       return;
       }
     if (transformedDataObjects.find(currentMasterRepresentation) != transformedDataObjects.end())
@@ -1287,7 +1287,7 @@ vtkDataObject* vtkSegmentation::GetSegmentRepresentation(std::string segmentId, 
 //---------------------------------------------------------------------------
 void vtkSegmentation::InvalidateNonMasterRepresentations()
 {
-  // Iterate through all segments and remove all representations that are not the master representation
+  // Iterate through all segments and remove all representations that are not the source representation
   for (SegmentMap::iterator segmentIt = this->Segments.begin(); segmentIt != this->Segments.end(); ++segmentIt)
     {
     segmentIt->second->RemoveAllRepresentations(this->MasterRepresentationName);
@@ -1735,13 +1735,13 @@ bool vtkSegmentation::CanAcceptRepresentation(std::string representationName)
     return false;
     }
 
-  // If representation is the master representation then it can be accepted
+  // If representation is the source representation then it can be accepted
   if (!representationName.compare(this->MasterRepresentationName))
     {
     return true;
     }
 
-  // Otherwise if the representation can be converted to the master representation, then
+  // Otherwise if the representation can be converted to the source representation, then
   // it can be accepted, if cannot be converted then not.
   vtkNew<vtkSegmentationConversionPaths> paths;
   this->Converter->GetPossibleConversions(representationName, this->MasterRepresentationName, paths);
