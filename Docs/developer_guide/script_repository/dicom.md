@@ -37,7 +37,7 @@ Download and import DICOM data set using DICOMweb from [Kheops](https://kheops.o
 How to obtain accessToken:
 
 - Google Cloud: Execute `gcloud auth print-access-token` once you have logged in
-- Kheops: create an album, create a sharing link (something like `https://demo.kheops.online/view/TfYXwbKAW7JYbAgZ7MyISf`), the token is the string after the last slash (`TfYXwbKAW7JYbAgZ7MyISf`).
+- Kheops: create an album, create a sharing link (something like `https://demo.kheops.online/view/{ACCESS_TOKEN_STRING_HERE}`), the token is the string after the last slash.
 
 ```python
 slicer.util.selectModule("DICOM")  # ensure DICOM database is initialized and
@@ -46,7 +46,7 @@ from DICOMLib import DICOMUtils
 DICOMUtils.importFromDICOMWeb(
   dicomWebEndpoint="https://demo.kheops.online/api",
   studyInstanceUID="1.3.6.1.4.1.14519.5.2.1.8421.4009.985792766370191766692237040819",
-  accessToken="TfYXwbKAW7JYbAgZ7MyISf")
+  accessToken="{ACCESS_TOKEN_STRING_HERE}")
 ```
 
 ### Access top level tags of DICOM images imported into Slicer
